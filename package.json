@@ -1,7 +1,7 @@
 {
-  "name": "fullstack-vue-graphql-starter",
+  "name": "les-foodies",
   "version": "1.0.0",
-  "description": "Starter for Full-Stack Vue-GraphQL-Apollo Projects",
+  "description": "Laboratoria Project - Framework Introduction",
   "main": "server.js",
   "scripts": {
     "server": "nodemon server.js",
@@ -9,7 +9,7 @@
     "dev": "concurrently --names \"server,client\" \"npm run server --silent\" \"npm run client --silent\""
   },
   "keywords": [],
-  "author": "Reed Barger",
+  "author": "Palmidia Garay",
   "license": "ISC",
   "dependencies": {
     "apollo-server": "^2.0.0-rc.7",
