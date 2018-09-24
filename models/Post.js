@@ -42,8 +42,8 @@ const PostSchema = new mongoose.Schema({
       },
       messageUser: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: true
+        required: true,
+        ref: "User"
       }
     }
   ]
