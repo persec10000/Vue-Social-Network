@@ -40,7 +40,7 @@
 
       <!-- Horizontal NavBar Links -->
       <v-toolbar-items class="hidden-xs-only">
-        <v-btn flat v-for="item in horizontalNavItems" :key="item.title" to="item.link">
+        <v-btn flat v-for="item in horizontalNavItems" :key="item.title" :to="item.link">
           <v-icon class="hidden-sm-only" left>{{item.icon}}</v-icon>
           {{item.title}}
         </v-btn>
