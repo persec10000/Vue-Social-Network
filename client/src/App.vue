@@ -50,6 +50,7 @@
     <!-- App Content -->
     <main>
       <v-container class="mt-4">
+        <transition name="fade"></transition>
         <router-view />
       </v-container>
     </main>
@@ -88,3 +89,23 @@ export default {
   }
 };
 </script>
+
+
+<style>
+.fade-enter-active,
+.fade-leave-active {
+  transition-property: opacity;
+  transition-duration: 0.25s;
+}
+
+.fade-enter-active {
+  transition-delay: 0.25s;
+}
+
+.fade-enter,
+.fade-leave-active {
+  opacity: 0;
+  transform: translateX(-25px);
+}
+</style>
+
