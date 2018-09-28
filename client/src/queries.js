@@ -12,7 +12,23 @@ export const GET_POSTS = gql`
 `;
 
 /* User Queries*/
-
+export const GET_CURRENT_USER = gql`
+  query {
+    getCurrentUser {
+      _id
+      username
+      password
+      email
+      avatar
+      joinDate
+      favorites {
+        _id
+        title
+        imageUrl
+      }
+    }
+  }
+`;
 /* Post Mutations*/
 
 /* User Mutations */
