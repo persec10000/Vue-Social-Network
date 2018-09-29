@@ -8,11 +8,15 @@ import store from "./store";
 import ApolloClient from "apollo-boost";
 import VueApollo from "vue-apollo";
 
+import FormAlert from "./components/Shared/FormAlert.vue";
+
+Vue.component("form-alert", FormAlert);
+
 Vue.use(VueApollo);
 
 // Setup ApolloClient
 export const defaultClient = new ApolloClient({
-  uri: "http://localhost:4000/graphql",
+  uri: "https://les-foodies-qptmwjbjya.now.sh/graphql",
   // Auth Token
   fetchOptions: {
     credentials: "include"
@@ -34,6 +38,10 @@ export const defaultClient = new ApolloClient({
     if (graphQLErrors) {
       for (let err of graphQLErrors) {
         console.dir(err);
+        if (err.name === "AuthenticationError") {
+          store.commit("setAuthError", err);
+          store.dispatch("signoutUser");
+        }
       }
     }
   }

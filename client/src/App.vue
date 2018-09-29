@@ -21,6 +21,14 @@
             {{item.title}}
           </v-list-tile-content>
         </v-list-tile>
+
+        <!-- SignOut Button -->
+        <v-list-tile v-if="user" @click="handleSignoutUser">
+          <v-list-tile-action>
+            <v-icon>exit_to_app</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>Salir</v-list-tile-content>
+        </v-list-tile>
       </v-list>
     </v-navigation-drawer>
 
@@ -47,6 +55,22 @@
           <v-icon class="hidden-sm-only" left>{{item.icon}}</v-icon>
           {{item.title}}
         </v-btn>
+
+        <!-- Profile Button -->
+        <v-btn flat to="/profile" v-if="user">
+          <v-icon class="hidden-sm-only">account_box</v-icon>
+          <v-badge right color="blue darken-2">
+            <!-- <span slot="badge">1</span> -->
+            Profile
+          </v-badge>
+        </v-btn>
+
+        <!-- Sign Out Button -->
+        <v-btn flat v-if="user" @click="handleSignoutUser">
+          <v-icon class="hidden-sm-only" left>exit_to_app</v-icon>
+          Salir
+        </v-btn>
+
       </v-toolbar-items>
     </v-toolbar>
 
@@ -54,40 +78,88 @@
     <main>
       <v-container class="mt-4">
         <transition name="fade">
-          <router-view/>
+          <router-view />
         </transition>
+
+        <!-- Signin Snackbar -->
+        <v-snackbar v-model="authSnackbar" color="success" :timeout="5000" bottom right>
+          <v-icon class="mr-3">check-circle</v-icon>
+          <h3>¡Has iniciado Sesión!</h3>
+          <v-btn dark flat @click="authSnackbar = false">Cerrar</v-btn>
+        </v-snackbar>
+
+        <!-- Auth Error Snackbar -->
+        <v-snackbar v-if="authError" v-model="authErrorSnackbar" color="info" :timeout='5000' bottom right>
+          <v-icon class="mr-3">cancel</v-icon>
+          <h3>{{authError.message}}</h3>
+          <v-btn dark flat to="/signin">Sign in</v-btn>
+        </v-snackbar>
+
       </v-container>
     </main>
   </v-app>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   name: "App",
   data() {
     return {
-      sideNav: false
+      sideNav: false,
+      authSnackbar: false,
+      authErrorSnackbar: false
     };
   },
+  watch: {
+    user(newValue, oldValue) {
+      if (oldValue === null) {
+        this.authSnackbar = true;
+      }
+    },
+    authError(value) {
+      // if auth error is not null, show auth error snackbar
+      if (value !== null) {
+        this.authErrorSnackbar = true;
+      }
+    }
+  },
   computed: {
+    ...mapGetters(["user", "authError"]),
     horizontalNavItems() {
-      return [
+      let items = [
         { icon: "chat", title: "Posts", link: "/posts" },
         { icon: "lock_open", title: "Sign In", link: "/signin" },
         { icon: "create", title: "Sign Up", link: "/signup" }
       ];
+      if (this.user) {
+        items = [{ icon: "chat", title: "Posts", link: "/posts" }];
+      }
+      return items;
     },
     sideNavItems() {
-      return [
+      let items = [
         { icon: "chat", title: "Posts", link: "/posts" },
         { icon: "lock_open", title: "Sign In", link: "/signin" },
         { icon: "create", title: "Sign Up", link: "/signup" }
       ];
+      if (this.user) {
+        items = [
+          { icon: "chat", title: "Posts", link: "/posts" },
+          { icon: "star", title: "Publicar", link: "/post/add" },
+          { icon: "account_box", title: "Perfil", link: "/profile" }
+        ];
+      }
+      return items;
     }
   },
   methods: {
     toggleSideNav() {
       this.sideNav = !this.sideNav;
+    },
+    handleSignoutUser() {
+      this.$store.dispatch("signoutUser");
     }
   }
 };

@@ -4,12 +4,12 @@ import "vuetify/dist/vuetify.min.css";
 
 Vue.use(Vuetify, {
   theme: {
-    primary: "#FBC02D",
-    secondary: "#F44708",
-    accent: "#E65100",
-    error: "#D10000",
+    primary: "#F7B40C",
+    secondary: "#117F70",
+    accent: "#9A031E",
+    error: "#9A031E",
     warning: "#B71C1C",
-    info: "#1A237E",
-    success: "#04E762"
+    info: "#235789",
+    success: "#33D328"
   }
 });

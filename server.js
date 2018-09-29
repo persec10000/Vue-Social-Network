@@ -39,12 +39,16 @@ const getUser = async token => {
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  formatError: error => ({
+    name: error.name,
+    message: error.message.replace("Context creation failed:", "")
+  }),
   context: async ({ req }) => {
     const token = req.headers["authorization"];
     return { User, Post, currentUser: await getUser(token) };
   }
 });
 
-server.listen().then(({ url }) => {
+server.listen({ port: process.env.PORT || 4000 }).then(({ url }) => {
   console.log(`Server listening on ${url}`);
 });
