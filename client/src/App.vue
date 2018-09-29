@@ -126,7 +126,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["user", "authError"]),
+    ...mapGetters(["authError", "user"]),
     horizontalNavItems() {
       let items = [
         { icon: "chat", title: "Posts", link: "/posts" },
