@@ -5,7 +5,7 @@
       <v-toolbar color="accent" dark flat>
         <v-toolbar-side-icon @click="toggleSideNav"></v-toolbar-side-icon>
         <router-link to="/" tag="span" style="cursor: pointer">
-          <h1 class="title pl-3">Foodies</h1>
+          <h1 class="title pl-3">Farabeuf</h1>
         </router-link>
       </v-toolbar>
 
@@ -38,14 +38,14 @@
       <v-toolbar-side-icon @click="toggleSideNav"></v-toolbar-side-icon>
       <v-toolbar-title class="hidden-xs-only">
         <router-link to="/" tag="span" style="cursor: pointer">
-          Foodies
+          Farabeuf
         </router-link>
       </v-toolbar-title>
 
       <v-spacer></v-spacer>
 
       <!-- Search Input -->
-      <v-text-field flex prepend-icon="search" placeholder="Search posts" color="accent" single-line hide-details></v-text-field>
+      <v-text-field flex prepend-icon="search" placeholder="Buscar" color="accent" single-line hide-details></v-text-field>
 
       <v-spacer></v-spacer>
 
@@ -89,7 +89,7 @@
         </v-snackbar>
 
         <!-- Auth Error Snackbar -->
-        <v-snackbar v-if="authError" v-model="authErrorSnackbar" color="info" :timeout='5000' bottom right>
+        <v-snackbar v-if="authError" v-model="authErrorSnackbar" color="warning" :timeout='5000' bottom right>
           <v-icon class="mr-3">cancel</v-icon>
           <h3>{{authError.message}}</h3>
           <v-btn dark flat to="/signin">Sign in</v-btn>
