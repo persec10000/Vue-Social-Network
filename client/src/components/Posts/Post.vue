@@ -43,10 +43,10 @@
       <!-- Message Input -->
       <v-layout class="mb-3" v-if="user">
         <v-flex xs12>
-          <v-form @submit.prevent="handleAddPostMessage">
+          <v-form v-model="isFormValid" lazy-validation ref="form" @submit.prevent="handleAddPostMessage">
             <v-layout row>
               <v-flex xs12>
-                <v-text-field v-model="messageBody" clearable :append-outer-icon="messageBody && 'send'" label="Agrega un Comentario" type="text" @click:append-outer="handleAddPostMessage" prepend-icon="email" required></v-text-field>
+                <v-text-field :rules="messageRules" v-model="messageBody" clearable :append-outer-icon="messageBody && 'send'" label="Agrega un Comentario" type="text" @click:append-outer="handleAddPostMessage" prepend-icon="email" required></v-text-field>
               </v-flex>
             </v-layout>
           </v-form>
@@ -78,7 +78,7 @@
                 </v-list-tile-content>
 
                 <v-list-tile-action class='hidden-xs-only'>
-                  <v-icon color="grey">chat_bubble</v-icon>
+                  <v-icon :color="checkIfOwnMessage(message) ? 'accent' : 'grey'">chat_bubble</v-icon>
                 </v-list-tile-action>
 
               </v-list-tile>
@@ -102,7 +102,12 @@ export default {
   data() {
     return {
       dialog: false,
-      messageBody: ""
+      messageBody: "",
+      isFormValid: true,
+      messageRules: [
+        message => !!message || 'Escribe un comentario.',
+        message => message.length < 100 || 'Tu comentario es demasiado largo.'
+      ]
     };
   },
   apollo: {
@@ -120,6 +125,7 @@ export default {
   },
   methods: {
     handleAddPostMessage() {
+      if(this.$refs.form.validate()){
       const variables = {
         messageBody: this.messageBody,
         userId: this.user._id,
@@ -143,9 +149,10 @@ export default {
           }
         })
         .then(({ data }) => {
-          console.log(data.addPostMessage);
+          this.$refs.form.reset();
         })
         .catch(err => console.error(err));
+      }
     },
     goToPreviousPage() {
       this.$router.go(-1);
@@ -154,6 +161,9 @@ export default {
       if (window.innerWidth > 500) {
         this.dialog = !this.dialog;
       }
+    },
+    checkIfOwnMessage(message){
+      return this.user && this.user._id === message.messageUser._id;
     }
   }
 };
