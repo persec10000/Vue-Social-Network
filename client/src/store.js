@@ -7,6 +7,7 @@ import { defaultClient as apolloClient } from "./main";
 import {
   GET_CURRENT_USER,
   GET_POSTS,
+  GET_USER_POSTS,
   ADD_POST,
   SIGNIN_USER,
   SIGNUP_USER
@@ -17,6 +18,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     posts: [],
+    userPosts: [],
     user: null,
     loading: false,
     error: null,
@@ -25,6 +27,9 @@ export default new Vuex.Store({
   mutations: {
     setPosts: (state, payload) => {
       state.posts = payload;
+    },
+    setUserPosts: (state, payload) => {
+      state.userPosts = payload;
     },
     setUser: (state, payload) => {
       state.user = payload;
@@ -73,6 +78,17 @@ export default new Vuex.Store({
           commit("setLoading", false);
           console.error(err);
         });
+    },
+    getUserPosts: ({ commit }, payload) => {
+      apolloClient
+        .query({
+          query: GET_USER_POSTS,
+          variables: payload
+        })
+        .then(({ data }) => {
+          commit("setUserPosts", data.getUserPosts);
+        })
+        .catch(error => console.log(error));
     },
     addPost: ({ commit }, payload) => {
       apolloClient
@@ -165,6 +181,7 @@ export default new Vuex.Store({
     userFavorites: state => state.user && state.user.favorites,
     loading: state => state.loading,
     error: state => state.error,
-    authError: state => state.authError
+    authError: state => state.authError,
+    userPosts: state => state.userPosts
   }
 });
