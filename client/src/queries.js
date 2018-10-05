@@ -1,6 +1,6 @@
 import { gql } from "apollo-boost";
 
-/* Posts */
+/* Posts Queries */
 export const GET_POSTS = gql`
   query {
     getPosts {
@@ -35,64 +35,20 @@ export const GET_POST = gql`
   }
 `;
 
-/* User Queries*/
+/* User Queries */
 export const GET_CURRENT_USER = gql`
   query {
     getCurrentUser {
       _id
       username
-      password
       email
+      password
       avatar
       joinDate
       favorites {
         _id
         title
         imageUrl
-      }
-    }
-  }
-`;
-/* Post Mutations*/
-export const ADD_POST = gql`
-  mutation(
-    $title: String!
-    $imageUrl: String!
-    $categories: [String]!
-    $description: String!
-    $creatorId: ID!
-  ) {
-    addPost(
-      title: $title
-      imageUrl: $imageUrl
-      categories: $categories
-      description: $description
-      creatorId: $creatorId
-    ) {
-      _id
-      title
-      imageUrl
-      categories
-      description
-      createdDate
-    }
-  }
-`;
-
-export const ADD_POST_MESSAGE = gql`
-  mutation($messageBody: String!, $userId: ID!, $postId: ID!) {
-    addPostMessage(
-      messageBody: $messageBody
-      userId: $userId
-      postId: $postId
-    ) {
-      _id
-      messageBody
-      messageDate
-      messageUser {
-        _id
-        username
-        avatar
       }
     }
   }
@@ -123,8 +79,77 @@ export const INFINITE_SCROLL_POSTS = gql`
   }
 `;
 
-/* User Mutations */
+/* Posts Mutations */
+export const ADD_POST = gql`
+  mutation(
+    $title: String!
+    $imageUrl: String!
+    $categories: [String]!
+    $description: String!
+    $creatorId: ID!
+  ) {
+    addPost(
+      title: $title
+      imageUrl: $imageUrl
+      categories: $categories
+      description: $description
+      creatorId: $creatorId
+    ) {
+      _id
+      title
+      imageUrl
+      categories
+      description
+    }
+  }
+`;
 
+export const ADD_POST_MESSAGE = gql`
+  mutation($messageBody: String!, $userId: ID!, $postId: ID!) {
+    addPostMessage(
+      messageBody: $messageBody
+      userId: $userId
+      postId: $postId
+    ) {
+      _id
+      messageBody
+      messageDate
+      messageUser {
+        _id
+        username
+        avatar
+      }
+    }
+  }
+`;
+
+export const LIKE_POST = gql`
+  mutation($postId: ID!, $username: String!) {
+    likePost(postId: $postId, username: $username) {
+      likes
+      favorites {
+        _id
+        title
+        imageUrl
+      }
+    }
+  }
+`;
+
+export const UNLIKE_POST = gql`
+  mutation($postId: ID!, $username: String!) {
+    unlikePost(postId: $postId, username: $username) {
+      likes
+      favorites {
+        _id
+        title
+        imageUrl
+      }
+    }
+  }
+`;
+
+/* User Mutations */
 export const SIGNIN_USER = gql`
   mutation($username: String!, $password: String!) {
     signinUser(username: $username, password: $password) {
