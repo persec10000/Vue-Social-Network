@@ -45,6 +45,7 @@ type LikesFavs {
 type Query {
   getCurrentUser: User
   getPosts: [Post]
+  getUserPosts(userId: ID!): [Post]!
   getPost(postId: ID!): Post!
   infiniteScrollPosts(pageNum: Int!, pageSize: Int!): PostPage
 }
