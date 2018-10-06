@@ -69,7 +69,7 @@
             <v-btn @click="loadPost(post)" color="info" floating fab small dark>
               <v-icon>edit</v-icon>
             </v-btn>
-            <v-btn color="error" floating fab small dark>
+            <v-btn @click="handleDeleteUserPost(post)" color="error" floating fab small dark>
               <v-icon>delete</v-icon>
             </v-btn>
 
@@ -178,6 +178,17 @@ export default {
     this.handleGetUserPosts();
   },
   methods: {
+    handleDeleteUserPost(post) {
+      this.loadPost(post, false);
+      const deletePost = window.confirm(
+        "¿Estás segur@ que quieres eliminar esta publicación?"
+      );
+      if (deletePost) {
+        this.$store.dispatch("deleteUserPost", {
+          postId: this.postId
+        });
+      }
+    },
     handleGetUserPosts() {
       this.$store.dispatch("getUserPosts", {
         userId: this.user._id
