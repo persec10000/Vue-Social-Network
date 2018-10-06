@@ -27,7 +27,7 @@
           <v-list-tile-action>
             <v-icon>exit_to_app</v-icon>
           </v-list-tile-action>
-          <v-list-tile-content>Salir</v-list-tile-content>
+          <v-list-tile-content></v-list-tile-content>
         </v-list-tile>
       </v-list>
     </v-navigation-drawer>
@@ -59,7 +59,7 @@
 
             <!-- Show icon if user's fav in search results -->
             <v-list-tile-action v-if="checkIfUserFav(result._id)">
-              <v-icon>favorite</v-icon>
+              <v-icon>grade</v-icon>
             </v-list-tile-action>
           </v-list-tile>
         </v-list>
@@ -68,25 +68,24 @@
       <v-spacer></v-spacer>
 
       <!-- Horizontal Navbar Links -->
-      <v-toolbar-items class="hidden-xs-only">
+      <v-toolbar-items>
         <v-btn flat v-for="item in horizontalNavItems" :key="item.title" :to="item.link">
-          <v-icon class="hidden-sm-only" left>{{item.icon}}</v-icon>
-          {{item.title}}
+          <v-icon left>{{item.icon}}</v-icon>
         </v-btn>
+
 
         <!-- Profile Button -->
         <v-btn flat to="/profile" v-if="user">
-          <v-icon class="hidden-sm-only">account_box</v-icon>
+          <v-icon>account_circle</v-icon>
           <v-badge right color="blue darken-2" :class="{'bounce': badgeAnimated}">
             <span slot="badge" v-if="userFavorites.length">{{userFavorites.length}}</span>
-            Profile
           </v-badge>
         </v-btn>
 
         <!-- Sign Out Button -->
         <v-btn flat v-if="user" @click="handleSignoutUser">
-          <v-icon class="hidden-sm-only" left>exit_to_app</v-icon>
-          Salir
+          <v-icon left>exit_to_app</v-icon>
+
         </v-btn>
 
       </v-toolbar-items>
@@ -156,26 +155,29 @@ export default {
     ...mapGetters(["searchResults", "authError", "user", "userFavorites"]),
     horizontalNavItems() {
       let items = [
-        { icon: "chat", title: "Posts", link: "/posts" },
-        { icon: "lock_open", title: "Sign In", link: "/signin" },
-        { icon: "create", title: "Sign Up", link: "/signup" }
+        { icon: "list", link: "/posts" },
+        { icon: "lock_open", link: "/signin" },
+        { icon: "create", link: "/signup" }
       ];
       if (this.user) {
-        items = [{ icon: "chat", title: "Posts", link: "/posts" }];
+        items = [
+          { icon: "list", link: "/posts" },
+          { icon: "tab", link: "post/add" }
+        ];
       }
       return items;
     },
     sideNavItems() {
       let items = [
-        { icon: "chat", title: "Posts", link: "/posts" },
-        { icon: "lock_open", title: "Sign In", link: "/signin" },
-        { icon: "create", title: "Sign Up", link: "/signup" }
+        { icon: "list", title: "Publicaciones", link: "/posts" },
+        { icon: "lock_open", title: "Inicia Sesión", link: "/signin" },
+        { icon: "create", title: "Registrate", link: "/signup" }
       ];
       if (this.user) {
         items = [
-          { icon: "chat", title: "Posts", link: "/posts" },
-          { icon: "star", title: "Publicar", link: "/post/add" },
-          { icon: "account_box", title: "Perfil", link: "/profile" }
+          { icon: "list", title: "Publicaciones", link: "/posts" },
+          { icon: "tab", title: "Publicar", link: "/post/add" },
+          { icon: "account_circle", title: "Perfil", link: "/profile" }
         ];
       }
       return items;
