@@ -45,7 +45,25 @@
       <v-spacer></v-spacer>
 
       <!-- Search Input -->
-      <v-text-field flex prepend-icon="search" placeholder="Buscar" color="accent" single-line hide-details></v-text-field>
+      <v-text-field v-model="searchTerm" @input="handleSearchPosts" flex prepend-icon="search" placeholder="Buscar" color="accent" single-line hide-details></v-text-field>
+
+      <!-- Search Results -->
+
+      <v-card dark v-if="searchResults.length" id="search__card">
+        <v-list>
+          <v-list-tile v-for="result in searchResults" :key="result._id" @click="goToSeachResult(result._id)">
+            <v-list-tile-title>
+              {{result.title}} -
+              <span class="font-weight-thin">{{formatDescription(result.description)}}</span>
+            </v-list-tile-title>
+
+            <!-- Show icon if user's fav in search results -->
+            <v-list-tile-action v-if="checkIfUserFav(result._id)">
+              <v-icon>favorite</v-icon>
+            </v-list-tile-action>
+          </v-list-tile>
+        </v-list>
+      </v-card>
 
       <v-spacer></v-spacer>
 
@@ -107,6 +125,7 @@ export default {
   name: "App",
   data() {
     return {
+      searchTerm: "",
       sideNav: false,
       authSnackbar: false,
       authErrorSnackbar: false,
@@ -125,16 +144,16 @@ export default {
         this.authErrorSnackbar = true;
       }
     },
-    userFavorites(value){
+    userFavorites(value) {
       // User favorites change
-      if(value){
+      if (value) {
         this.badgeAnimated = true;
         setTimeout(() => (this.badgeAnimated = false), 1000);
       }
     }
   },
   computed: {
-    ...mapGetters(["authError", "user", "userFavorites"]),
+    ...mapGetters(["searchResults", "authError", "user", "userFavorites"]),
     horizontalNavItems() {
       let items = [
         { icon: "chat", title: "Posts", link: "/posts" },
@@ -163,11 +182,32 @@ export default {
     }
   },
   methods: {
+    goToSeachResult(resultId) {
+      this.searchTerm = "";
+      this.$router.push(`/posts/${resultId}`);
+      this.$store.commit("clearSearchResults");
+    },
+    handleSearchPosts() {
+      this.$store.dispatch("searchPosts", {
+        searchTerm: this.searchTerm
+      });
+    },
+    formatDescription(description) {
+      return description.length > 15
+        ? `${description.slice(0, 15)}...`
+        : description;
+    },
     toggleSideNav() {
       this.sideNav = !this.sideNav;
     },
     handleSignoutUser() {
       this.$store.dispatch("signoutUser");
+    },
+    checkIfUserFav(resultId) {
+      return (
+        this.userFavorites &&
+        this.userFavorites.some(fave => fave._id === resultId)
+      );
     }
   }
 };
@@ -180,6 +220,15 @@ export default {
   transition-duration: 0.25s;
 }
 
+/* Search results */
+#search__card {
+  position: absolute;
+  width: 100vw;
+  z-index: 8;
+  top: 100%;
+  left: 0%;
+}
+
 .fade-enter-active {
   transition-delay: 0.25s;
 }
@@ -189,21 +238,26 @@ export default {
   opacity: 0;
 }
 
-.bounce{
+.bounce {
   animation: bounce 1s both;
 }
 
 @keyframe bounce {
-  0%, 20%, 53%, 80%, 100%{
-    transform: translate3d(0,0,0);
+  0%,
+  20%,
+  53%,
+  80%,
+  100% {
+    transform: translate3d(0, 0, 0);
   }
-  40%, 43%{
+  40%,
+  43% {
     transform: translate3d(0, -20px, 0);
   }
-    70%{
+  70% {
     transform: translate3d(0, -10px, 0);
   }
-      90%{
+  90% {
     transform: translate3d(0, -4px, 0);
   }
 }
