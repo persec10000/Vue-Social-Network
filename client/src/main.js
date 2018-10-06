@@ -14,6 +14,7 @@ Vue.component("form-alert", FormAlert);
 
 Vue.use(VueApollo);
 
+// "https://farabeuf-hneialwhmk.now.sh/graphql"
 // Setup ApolloClient
 export const defaultClient = new ApolloClient({
   uri: "http://localhost:4000/graphql",

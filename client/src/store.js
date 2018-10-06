@@ -10,7 +10,8 @@ import {
   GET_USER_POSTS,
   ADD_POST,
   SIGNIN_USER,
-  SIGNUP_USER
+  SIGNUP_USER,
+  UPDATE_USER_POST
 } from "./queries";
 
 Vue.use(Vuex);
@@ -123,6 +124,25 @@ export default new Vuex.Store({
         .catch(err => {
           console.error(err);
         });
+    },
+    updateUserPost: ({ state, commit }, payload) => {
+      apolloClient
+        .mutate({
+          mutation: UPDATE_USER_POST,
+          variables: payload
+        })
+        .then(({ data }) => {
+          const index = state.userPosts.findIndex(
+            post => post._id === data.updateUserPost._id
+          );
+          const userPosts = [
+            ...state.userPosts.slice(0, index),
+            data.updateUserPost,
+            ...state.userPosts.slice(index + 1)
+          ];
+          commit("setUserPosts", userPosts);
+        })
+        .catch(error => console.log(error));
     },
     signinUser: ({ commit }, payload) => {
       commit("clearError");
