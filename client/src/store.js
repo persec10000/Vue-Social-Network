@@ -11,7 +11,9 @@ import {
   ADD_POST,
   SIGNIN_USER,
   SIGNUP_USER,
-  UPDATE_USER_POST
+  UPDATE_USER_POST,
+  DELETE_USER_POST,
+  INFINITE_SCROLL_POSTS
 } from "./queries";
 
 Vue.use(Vuex);
@@ -116,7 +118,17 @@ export default new Vuex.Store({
               _id: -1,
               ...payload
             }
-          }
+          },
+          // Run queries to get fresh data
+          refetchQueries: [
+            {
+              query: INFINITE_SCROLL_POSTS,
+              variables: {
+                pageNum: 1,
+                pageSize: 2
+              }
+            }
+          ]
         })
         .then(({ data }) => {
           console.log(data.addPost);
@@ -138,6 +150,24 @@ export default new Vuex.Store({
           const userPosts = [
             ...state.userPosts.slice(0, index),
             data.updateUserPost,
+            ...state.userPosts.slice(index + 1)
+          ];
+          commit("setUserPosts", userPosts);
+        })
+        .catch(error => console.log(error));
+    },
+    deleteUserPost: ({ state, commit }, payload) => {
+      apolloClient
+        .mutate({
+          mutation: DELETE_USER_POST,
+          variables: payload
+        })
+        .then(({ data }) => {
+          const index = state.userPosts.findIndex(
+            post => post._id === data.deleteUserPost._id
+          );
+          const userPosts = [
+            ...state.userPosts.slice(0, index),
             ...state.userPosts.slice(index + 1)
           ];
           commit("setUserPosts", userPosts);
