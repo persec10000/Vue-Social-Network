@@ -1,42 +1,41 @@
 <template>
-    <v-container v-if="getPost" class="mt-3" flexbox center>
-      <!-- Post Card -->
-      <v-layout row wrap>
-        <v-flex xs12>
-          <v-card hover>
-              <v-card-title>
-              <h1>{{getPost.title}}</h1>
+  <v-container v-if="getPost" class="mt-3" flexbox center>
+    <!-- Post Card -->
+    <v-layout row wrap>
+      <v-flex xs12>
+        <v-card hover>
+          <v-card-title>
+            <h1>{{getPost.title}}</h1>
             <v-btn @click="handleToggleLike" large icon v-if="user">
               <v-icon large :color="checkIfPostLiked(getPost._id) ? 'red' : 'grey'">favorite</v-icon>
             </v-btn>
-              <h3 class="ml-3 font-weight-thin">{{getPost.likes}} LIKES</h3>
-              <v-spacer></v-spacer>
-              <v-icon @click="goToPreviousPage" color="info" large>arrow_back</v-icon>
-            </v-card-title>
+            <h3 class="ml-3 font-weight-thin">{{getPost.likes}} LIKES</h3>
+            <v-spacer></v-spacer>
+            <v-icon @click="goToPreviousPage" color="info" large>arrow_back</v-icon>
+          </v-card-title>
 
-            <v-tooltip right>
-              <span>¡Da click para hacer más grande la imagen!</span>
-              <v-card-media @click="toggleImageDialog" slot="activator" :src="getPost.imageUrl" id="post__image"></v-card-media>
-            </v-tooltip>
+          <v-tooltip right>
+            <span>¡Da click para hacer más grande la imagen!</span>
+            <v-card-media @click="toggleImageDialog" slot="activator" :src="getPost.imageUrl" id="post__image"></v-card-media>
+          </v-tooltip>
 
-            <!-- Post image Dialog -->
-            <v-dialog v-model="dialog">
-              <v-card>
-                <v-card-media :src="getPost.imageUrl" height="80vh"></v-card-media>
-              </v-card>
-            </v-dialog>
+          <!-- Post image Dialog -->
+          <v-dialog v-model="dialog">
+            <v-card>
+              <v-card-media :src="getPost.imageUrl" height="80vh"></v-card-media>
+            </v-card>
+          </v-dialog>
 
-            <v-card-text>
-              <span v-for="(category, index) in getPost.categpries" :key="index">
-                <v-chip class="mb-3" color="accent" text-color="white">{{category}}</v-chip>
-              </span>
-              <h3>{{getPost.description}}</h3>
-            </v-card-text>
+          <v-card-text>
+            <span v-for="(category, index) in getPost.categpries" :key="index">
+              <v-chip class="mb-3" color="accent" text-color="white">{{category}}</v-chip>
+            </span>
+            <h3>{{getPost.description}}</h3>
+          </v-card-text>
 
-          </v-card>
-        </v-flex>
-      </v-layout>
-
+        </v-card>
+      </v-flex>
+    </v-layout>
 
     <!-- Messages Section -->
     <div class="mt-3">
@@ -73,7 +72,7 @@
                   </v-list-tile-title>
                   <v-list-tile-sub-title>
                     {{message.messageUser.username}}
-                    <span class="grey--text text--lighten-1 hidden-xs-only">{{message.messageDate}}</span>
+                    <span class="grey--text text--lighten-1 hidden-xs-only">{{getTimeFromNow(message.messageDate)}}</span>
                   </v-list-tile-sub-title>
                 </v-list-tile-content>
 
@@ -88,7 +87,7 @@
       </v-layout>
 
     </div>
-    </v-container>
+  </v-container>
 </template>
 
 <script>
@@ -99,6 +98,8 @@ import {
   LIKE_POST,
   UNLIKE_POST
 } from "../../queries";
+
+import moment from "moment";
 
 export default {
   name: "Post",
@@ -208,15 +209,15 @@ export default {
           console.log(data);
           const updatedUser = {
             ...this.user,
-            favorites: data.unlikePost.favorites,
-          }
+            favorites: data.unlikePost.favorites
+          };
           this.$store.commit("setUser", updatedUser);
         })
         .catch(err => console.error(err));
     },
     handleAddPostMessage() {
       if (this.$refs.form.validate()) {
-        const  variables = {
+        const variables = {
           messageBody: this.messageBody,
           userId: this.user._id,
           postId: this.postId
@@ -254,7 +255,10 @@ export default {
       }
     },
     checkIfOwnMessage(message) {
-      return this.user && this.user._id === message.messageUser._id
+      return this.user && this.user._id === message.messageUser._id;
+    },
+    getTimeFromNow(time) {
+      return moment(new Date(time)).fromNow();
     }
   }
 };

@@ -12,7 +12,7 @@
             <v-card-title primary-title>
               <div>
                 <div class="headline">{{user.username}}</div>
-                <div>Miembro desde: {{user.joinDate}}</div>
+                <div>Miembro desde: {{formatCreatedDate(user.joinDate)}}</div>
                 <div class="hidden-xs-only font-weigth-thin">{{user.favorites.length}} Favoritos</div>
                 <div class="hidden-xs-only font-weigth-thin">Publicaciones Agregadas: {{userPosts.length}} </div>
               </div>
@@ -41,7 +41,7 @@
       <v-layout row wrap>
         <v-flex xs12 sm6 v-for="favorite in userFavorites" :key="favorite._id">
           <v-card class="mt-3 ml-1 mr-2" hover>
-            <v-card-media height="30vh" :src="favorite.imageUrl"></v-card-media>
+            <v-card-media @click="goToPost(favorite._id)" height="30vh" :src="favorite.imageUrl"></v-card-media>
             <v-card-text>{{favorite.title}}</v-card-text>
           </v-card>
         </v-flex>
@@ -73,7 +73,7 @@
               <v-icon>delete</v-icon>
             </v-btn>
 
-            <v-card-media height="30vh" :src="post.imageUrl"></v-card-media>
+            <v-card-media @click="goToPost(post._id)" height="30vh" :src="post.imageUrl"></v-card-media>
             <v-card-text>{{post.title}}</v-card-text>
           </v-card>
         </v-flex>
@@ -142,6 +142,7 @@
 
 <script>
 import { mapGetters } from "vuex";
+import moment from "moment";
 
 export default {
   name: "Profile",
@@ -217,6 +218,12 @@ export default {
       this.imageUrl = imageUrl;
       this.categories = categories;
       this.description = description;
+    },
+    formatCreatedDate(date) {
+      return moment(new Date(date)).format("ll");
+    },
+    goToPost(id) {
+      this.$router.push(`/posts/${id}`);
     }
   }
 };
