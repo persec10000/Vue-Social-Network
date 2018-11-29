@@ -53,7 +53,7 @@
 
           <v-layout row>
             <v-flex xs12>
-              <v-btn :loaging="loading" :disabled="!isFormValid || loading" color="info" type="submit">
+              <v-btn :loading="loading" :disabled="!isFormValid || loading" color="info" type="submit">
                 <span slot="loader" class="custom-loader">
                   <v-icon light>cached</v-icon>
                 </span>
@@ -107,7 +107,7 @@ export default {
           description: this.description,
           creatorId: this.user._id
         });
-        this.$router.push("/")
+        this.$router.push("/");
       }
     }
   },
